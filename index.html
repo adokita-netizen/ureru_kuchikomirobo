@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>売れる口コミロボ</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", "Meiryo", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== Stats Section ===== */
+    .stats-section {
+      background: linear-gradient(135deg, #ffca28 0%, #ffb300 40%, #ff8f00 100%);
+      padding: 80px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative background shapes */
+    .stats-section::before {
+      content: "";
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .stats-section::after {
+      content: "";
+      position: absolute;
+      bottom: -60px;
+      left: -60px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .stats-section .section-heading {
+      text-align: center;
+      margin-bottom: 56px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stats-section .section-heading h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.04em;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      line-height: 1.6;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      max-width: 1040px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== Individual Card ===== */
+    .stat-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 44px 28px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.08),
+        0 1px 4px rgba(0, 0, 0, 0.04);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity: 0;
+      transform: translateY(32px);
+    }
+
+    .stat-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-6px);
+      box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.14),
+        0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Top accent bar */
+    .stat-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .stat-card:nth-child(1)::before {
+      background: linear-gradient(90deg, #ff6b35, #ff8f00);
+    }
+
+    .stat-card:nth-child(2)::before {
+      background: linear-gradient(90deg, #ff8f00, #ffca28);
+    }
+
+    .stat-card:nth-child(3)::before {
+      background: linear-gradient(90deg, #ffca28, #ffd54f);
+    }
+
+    /* Icon circle */
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 24px;
+    }
+
+    .stat-card:nth-child(1) .stat-icon {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    }
+
+    .stat-card:nth-child(2) .stat-icon {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    }
+
+    .stat-card:nth-child(3) .stat-icon {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #666;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    .stat-value-wrapper {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .stat-number {
+      font-size: 72px;
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, #ff8f00, #ffb300);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-unit {
+      font-size: 18px;
+      font-weight: 700;
+      color: #888;
+    }
+
+    .stat-description {
+      margin-top: 16px;
+      font-size: 13px;
+      color: #aaa;
+      line-height: 1.6;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .stats-section {
+        padding: 56px 16px;
+      }
+
+      .stats-section .section-heading h2 {
+        font-size: 22px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        max-width: 400px;
+      }
+
+      .stat-number {
+        font-size: 56px;
+      }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .stats-grid {
+        gap: 20px;
+      }
+
+      .stat-number {
+        font-size: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="section-heading">
+      <h2>安心して来店できる仕組みのご提供</h2>
+    </div>
+
+    <div class="stats-grid">
+      <!-- Card 1 -->
+      <div class="stat-card" data-delay="0">
+        <div class="stat-icon">👥</div>
+        <p class="stat-label">新規来店客数平均</p>
+        <div class="stat-value-wrapper">
+          <span class="stat-number" data-target="190">0</span>
+          <span class="stat-unit">%増加</span>
+        </div>
+        <p class="stat-description">口コミ効果で新規のお客様が大幅に増加</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="stat-card" data-delay="120">
+        <div class="stat-icon">📊</div>
+        <p class="stat-label">集客の費用対効果</p>
+        <div class="stat-value-wrapper">
+          <span class="stat-number" data-target="40">0</span>
+          <span class="stat-unit">%改善</span>
+        </div>
+        <p class="stat-description">広告費を抑えながら効果的に集客</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="stat-card" data-delay="240">
+        <div class="stat-icon">🔄</div>
+        <p class="stat-label">リピート率平均</p>
+        <div class="stat-value-wrapper">
+          <span class="stat-number" data-target="8">0</span>
+          <span class="stat-unit">%UP</span>
+        </div>
+        <p class="stat-description">継続的な来店につながるリピーター獲得</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Intersection Observer for fade-in animation
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const card = entry.target;
+            const delay = parseInt(card.getAttribute("data-delay") || "0", 10);
+            setTimeout(() => {
+              card.classList.add("visible");
+              card.style.transition =
+                "opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1)";
+              animateNumber(card.querySelector(".stat-number"));
+            }, delay);
+            observer.unobserve(card);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    document.querySelectorAll(".stat-card").forEach((card) => observer.observe(card));
+
+    // Count-up animation
+    function animateNumber(el) {
+      const target = parseInt(el.getAttribute("data-target"), 10);
+      const duration = 1400;
+      const start = performance.now();
+
+      function update(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target);
+        if (progress < 1) requestAnimationFrame(update);
+      }
+
+      requestAnimationFrame(update);
+    }
+  </script>
+</body>
+</html>
